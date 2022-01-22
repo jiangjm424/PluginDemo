@@ -5,7 +5,8 @@ package cn.jm.happy.helloPlugin
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
-
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.AppPlugin
 /**
  * A simple 'hello world' plugin.
  */
@@ -20,13 +21,27 @@ class StaticsPlugin implements Plugin<Project> {
                 println("rrr from plugin 'cn.jm.happy.helloPlugin.greeting'")
             }
         }
-//        def isApp = project.plugins.hasPlugin(AppPlugin)
-//        project "jiang is app: $isApp"
-        //only application module needs this plugin to generate register code
-//        def android = project.extensions.getByType(AppExtension)
-//        def transformImpl = new StaticsTransform(project)
+        StaticsExtension staticsExtension = project.extensions.create("statics", StaticsExtension)
+        println "create statics ext: ${staticsExtension.name}"
+        project.afterEvaluate {
+            println "after statics ext: ${staticsExtension.name}"
+        }
+//        int size = project.plugins.size()
+//        for (int i=0;i<size;i++) {
+//
+//        }
+        println "jiang plugins: ${project.plugins}"
+//        int size2 = project.extensions.size()
+//        for (int i=0;i<size2;i++) {
+//        }
 
-        //register this plugin
-//        android.registerTransform(transformImpl)
+        println "jiang extensions: ${project.extensions}"
+        def isApp = project.plugins.hasPlugin(AppPlugin)
+        println "jiang is app: $isApp"
+//        //only application module needs this plugin to generate register code
+        def android = project.extensions.getByType(AppExtension)
+        def transformImpl = new StaticsTransform(project)
+
+        android.registerTransform(transformImpl)
     }
 }

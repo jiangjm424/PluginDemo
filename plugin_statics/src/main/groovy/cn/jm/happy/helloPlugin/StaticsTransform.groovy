@@ -2,9 +2,11 @@ package cn.jm.happy.helloPlugin
 
 import com.android.build.api.transform.*
 import org.gradle.api.Project
-
+import com.android.build.gradle.internal.pipeline.TransformManager
 /**
  * transform api
+ *
+ * transform是在构建的时候运行， 在sync项目时不运行
  */
 class StaticsTransform extends Transform {
 
@@ -17,6 +19,7 @@ class StaticsTransform extends Transform {
 
     /**
      * name of this transform
+     * 人在使用插件的模块中生成一个任务：transformClassesWith{getName()}ForDebug
      * @return
      */
     @Override
@@ -45,7 +48,7 @@ class StaticsTransform extends Transform {
 
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
-        println "custom plugin transform start--------> $System.currentTimeMillis()"
+        println "custom plugin transform start--------> "
         transformInvocation.inputs.forEach {
             it.directoryInputs.forEach {
                 println "dir: $it"
