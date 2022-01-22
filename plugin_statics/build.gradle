@@ -1,0 +1,44 @@
+plugins {
+    // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
+    id 'java-gradle-plugin'
+    // Apply the Groovy plugin to add support for Groovy
+    id 'groovy'
+    id 'maven-publish'
+}
+dependencies {
+    implementation "com.android.tools.build:gradle:7.0.4"
+}
+gradlePlugin {
+    // Define the plugin
+    plugins {
+        //这个也是影响gradle task中生成的任务名，但是运行这个任务名时，好像啥也没发生
+        staticsls3 {
+            id = 'cn.jm.happy.statics'
+            implementationClass = 'cn.jm.happy.helloPlugin.StaticsPlugin'
+        }
+    }
+}
+
+//发布插件 的地方，在这里的修改会影响tasks/publishing下的任务名称
+publishing {
+    publications {
+        // 这里的 statics2 可以任意命名，会影响gradle task中生成的任务名,并且运行后会生成对应的插件包
+        staticsls2(MavenPublication) {
+            // 插件的组ID，建议设置为插件的包名
+            groupId = 'cn.jm.happy'
+            // 翻译过来是 工件ID，我的理解是插件的名字，这里修改会影响生成插件目录
+            artifactId = 'staticsls'
+            version = '0.0.1'
+            //以上groupId：artifactId：version会生成cn/jm/happy/statics3的文件夹
+
+            // 这个需要，要不不会去编译插件文件
+            from components.java
+        }
+    }
+    //修改发布插件的地址
+    repositories {
+        maven {
+            url "$rootDir/repo"
+        }
+    }
+}
